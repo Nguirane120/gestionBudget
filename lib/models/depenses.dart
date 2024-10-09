@@ -1,8 +1,6 @@
-enum DepenseCategory { loyer, connexion, fourniture, transport, ravitaillement }
-
-class Depenses {
+class Depense {
+  String category;
   double montant;
-  DepenseCategory category;
 
-  Depenses({required this.category, required this.montant});
+  Depense({required this.category, required this.montant});
 }

@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:gestionbudget/consts.dart';
-import 'package:gestionbudget/serivices/depenseservice.dart';
+import 'package:gestionbudget/models/depenses.dart';
 
 class Depenselist extends StatefulWidget {
-  const Depenselist({super.key});
+  Depenselist({required this.depenseList});
+  final List<Depense> depenseList;
 
   @override
   State<Depenselist> createState() => _DepenselistState();
 }
 
 class _DepenselistState extends State<Depenselist> {
-  Depenseservice depenseservice = Depenseservice();
+  late List<Depense> depenses;
+  @override
+  void initState() {
+    super.initState();
+    depenses = widget.depenseList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,21 +33,29 @@ class _DepenselistState extends State<Depenselist> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-                itemCount: depenseservice.getDepenses().length,
-                itemBuilder: (context, index) {
-                  final depense = depenseservice.getDepenses()[index];
-                  return ListTile(
-                      title: Text('${depense.category.name.toUpperCase()}'),
-                      subtitle: Text('${depense.montant}'),
-                      trailing: InkWell(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.delete,
-                          color: AppColor.secondarycolor,
-                        ),
-                      ));
-                }),
+            child: depenses.isEmpty
+                ? Center(
+                    child: Text("pas de depense"),
+                  )
+                : ListView.builder(
+                    itemCount: depenses.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                          title:
+                              Text('${depenses[index].category.toUpperCase()}'),
+                          subtitle: Text('${depenses[index].montant}'),
+                          trailing: InkWell(
+                            onTap: () {
+                              setState(() {
+                                depenses.removeAt(index);
+                              });
+                            },
+                            child: Icon(
+                              Icons.delete,
+                              color: AppColor.secondarycolor,
+                            ),
+                          ));
+                    }),
           )
         ],
       ),

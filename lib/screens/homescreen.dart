@@ -1,11 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:gestionbudget/consts.dart';
+import 'package:gestionbudget/models/depenses.dart';
 import 'package:gestionbudget/screens/depenseform.dart';
 import 'package:gestionbudget/widgets/containercontent.dart';
 import 'package:gestionbudget/widgets/depenselist.dart';
 
-class Homescreen extends StatelessWidget {
+class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
+
+  @override
+  State<Homescreen> createState() => _HomescreenState();
+}
+
+class _HomescreenState extends State<Homescreen> {
+  List<Depense> depenses = [];
+
+  void _ajouterDepense(Depense depense) {
+    setState(() {
+      depenses.add(depense);
+    });
+  }
+
+  void goTodepenseForm() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Depenseform(),
+      ),
+    );
+
+    if (result != null && result is Depense) {
+      _ajouterDepense(result);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,23 +84,16 @@ class Homescreen extends StatelessWidget {
           SizedBox(
             height: 10.0,
           ),
-          Expanded(child: Depenselist())
+          Expanded(child: Depenselist(depenseList: depenses))
         ],
       )),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColor.secondarycolor,
-        onPressed: () {},
-        child: IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return Depenseform();
-              }));
-            },
-            icon: Icon(
-              Icons.add,
-              color: Colors.white,
-            )),
-      ),
+          backgroundColor: AppColor.secondarycolor,
+          onPressed: goTodepenseForm,
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          )),
     );
   }
 }

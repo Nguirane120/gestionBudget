@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestionbudget/consts.dart';
+import 'package:gestionbudget/models/depenses.dart';
 import 'package:gestionbudget/widgets/input.dart';
 
 class Depenseform extends StatefulWidget {
@@ -10,6 +11,20 @@ class Depenseform extends StatefulWidget {
 }
 
 class _DepenseformState extends State<Depenseform> {
+  final TextEditingController _titreController = TextEditingController();
+  final TextEditingController _montantController = TextEditingController();
+
+  void handleSubmit() {
+    if (_titreController.text.isNotEmpty &&
+        _montantController.text.isNotEmpty) {
+      final titre = _titreController.text;
+      final montant = double.tryParse(_montantController.text) ?? 0.0;
+
+      Depense nouvelleDepense = Depense(category: titre, montant: montant);
+      Navigator.pop(context, nouvelleDepense);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +55,10 @@ class _DepenseformState extends State<Depenseform> {
                 style: TextStyle(color: AppColor.primarycolor),
               ),
             ),
-            InputWidget(placeholder: "electricite"),
+            InputWidget(
+              placeholder: "electricite",
+              fieldController: _titreController,
+            ),
             SizedBox(
               height: 10,
             ),
@@ -54,7 +72,10 @@ class _DepenseformState extends State<Depenseform> {
             SizedBox(
               height: 10,
             ),
-            InputWidget(placeholder: "12.000"),
+            InputWidget(
+              placeholder: "12.000",
+              fieldController: _montantController,
+            ),
             SizedBox(
               height: 20,
             ),
@@ -65,7 +86,7 @@ class _DepenseformState extends State<Depenseform> {
                   border: Border.all(color: AppColor.primarycolor),
                   color: AppColor.primarycolor),
               child: TextButton(
-                onPressed: () {},
+                onPressed: handleSubmit,
                 child: Text(
                   "VALIDER",
                   style: TextStyle(color: Colors.white),
