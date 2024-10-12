@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gestionbudget/consts.dart';
+import 'package:gestionbudget/models/budget.dart';
 import 'package:gestionbudget/models/depenses.dart';
+import 'package:gestionbudget/models/revenu.dart';
 import 'package:gestionbudget/screens/depenseform.dart';
 import 'package:gestionbudget/widgets/containercontent.dart';
 import 'package:gestionbudget/widgets/depenselist.dart';
@@ -13,20 +15,38 @@ class Homescreen extends StatefulWidget {
 }
 
 class _HomescreenState extends State<Homescreen> {
-  List<Depense> depenses = [];
+  final List<Depense> depenses = [];
+  List<Revenu> revenus = [];
+  double totalDepenses = 0.0;
+  double totalRevenus = 0.0;
+  double solde = 0.0;
+
+  void _calculerTotaux() {
+    totalDepenses = Budget(depenses: depenses, revenus: revenus).totalDepenses;
+    totalRevenus = Budget(depenses: depenses, revenus: revenus).totalRevenus;
+    solde = totalRevenus - totalDepenses;
+  }
 
   void _ajouterDepense(Depense depense) {
     setState(() {
       depenses.add(depense);
+      _calculerTotaux();
     });
   }
 
   void goTodepenseForm() async {
     final result = await Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => Depenseform(),
-      ),
+      PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              Depenseform(),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            var tween = Tween(begin: Offset(0.0, 1.0), end: Offset.zero);
+            return SlideTransition(
+              position: animation.drive(tween),
+              child: child,
+            );
+          }),
     );
 
     if (result != null && result is Depense) {
@@ -62,7 +82,7 @@ class _HomescreenState extends State<Homescreen> {
               textContainer: "Budget",
               widthContainer: 350.0,
               heightContainer: 150,
-              someContaine: 120.000),
+              someContaine: totalRevenus),
           SizedBox(
             height: 15.0,
           ),
@@ -73,12 +93,12 @@ class _HomescreenState extends State<Homescreen> {
                   textContainer: "Depense",
                   widthContainer: 170,
                   heightContainer: 150,
-                  someContaine: 120.000),
+                  someContaine: totalDepenses),
               Containercontent(
                   textContainer: "Solde",
                   widthContainer: 170,
                   heightContainer: 150,
-                  someContaine: 120.000),
+                  someContaine: solde),
             ],
           ),
           SizedBox(

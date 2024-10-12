@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gestionbudget/consts.dart';
-import 'package:gestionbudget/screens/homescreen.dart';
+import 'package:gestionbudget/widgets/bottomNavigation.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: AppColor.primarycolor),
         useMaterial3: true,
       ),
-      home: const Homescreen(),
+      home: BottomNavigation(),
     );
   }
 }
