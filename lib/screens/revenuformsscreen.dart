@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:gestionbudget/consts.dart';
 import 'package:gestionbudget/models/revenu.dart';
+import 'package:gestionbudget/providers/budget.dart';
+import 'package:gestionbudget/screens/homescreen.dart';
 import 'package:gestionbudget/widgets/input.dart';
+import 'package:provider/provider.dart';
 
 class Revenuformsscreen extends StatefulWidget {
   const Revenuformsscreen({super.key});
@@ -85,7 +88,16 @@ class _RevenuformsscreenState extends State<Revenuformsscreen> {
                   border: Border.all(color: AppColor.primarycolor),
                   color: AppColor.primarycolor),
               child: TextButton(
-                onPressed: handleSubmit,
+                onPressed: () {
+                  final montant =
+                      double.tryParse(_montantController.text) ?? 0.0;
+                  Provider.of<BudgetProvider>(context, listen: false)
+                      .ajouterRevenu(Revenu(
+                          source: _titreController.text, montant: montant));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return Homescreen();
+                  }));
+                },
                 child: Text(
                   "VALIDER",
                   style: TextStyle(color: Colors.white),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gestionbudget/consts.dart';
 import 'package:gestionbudget/models/depenses.dart';
+import 'package:gestionbudget/providers/budget.dart';
 import 'package:gestionbudget/widgets/input.dart';
+import 'package:provider/provider.dart';
 
 class Depenseform extends StatefulWidget {
   const Depenseform({super.key});
@@ -86,7 +88,15 @@ class _DepenseformState extends State<Depenseform> {
                   border: Border.all(color: AppColor.primarycolor),
                   color: AppColor.primarycolor),
               child: TextButton(
-                onPressed: handleSubmit,
+                onPressed: () {
+                  final montant =
+                      double.tryParse(_montantController.text) ?? 0.0;
+
+                  Provider.of<BudgetProvider>(context, listen: false)
+                      .ajouterDepense(Depense(
+                          category: _titreController.text, montant: montant));
+                  Navigator.pop(context);
+                },
                 child: Text(
                   "VALIDER",
                   style: TextStyle(color: Colors.white),

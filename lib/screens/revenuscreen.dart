@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gestionbudget/consts.dart';
 import 'package:gestionbudget/models/revenu.dart';
+import 'package:gestionbudget/providers/budget.dart';
 import 'package:gestionbudget/screens/revenuformsscreen.dart';
+import 'package:provider/provider.dart';
 
 class Revenuscreen extends StatefulWidget {
   const Revenuscreen({super.key});
@@ -51,44 +53,62 @@ class _RevenuscreenState extends State<Revenuscreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.only(top: 10, left: 15),
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              "Liste des revenus",
-              style: TextStyle(
-                  color: AppColor.secondarycolor, fontWeight: FontWeight.bold),
+    return Scaffold(
+      body: Container(
+        padding: EdgeInsets.only(top: 60, left: 15),
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Liste des revenus",
+                style: TextStyle(
+                    color: AppColor.secondarycolor,
+                    fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Expanded(
-            child: revenus.isEmpty
-                ? Center(
-                    child: Text("pas de revenu"),
-                  )
-                : ListView.builder(
-                    itemCount: revenus.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                          title: Text('${revenus[index].source.toUpperCase()}'),
-                          subtitle: Text('${revenus[index].montant}'),
-                          trailing: InkWell(
-                            onTap: () {
-                              setState(() {
-                                revenus.removeAt(index);
-                              });
-                            },
-                            child: Icon(
-                              Icons.delete,
-                              color: AppColor.secondarycolor,
-                            ),
-                          ));
-                    }),
-          )
-        ],
+            Consumer<BudgetProvider>(builder: (context, revenuData, child) {
+              return Expanded(
+                child: revenuData.revenus.isEmpty
+                    ? Center(
+                        child: Text("pas de revenu"),
+                      )
+                    : ListView.builder(
+                        itemCount: revenuData.revenus.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                              title: Text(
+                                  '${revenuData.revenus[index].source.toUpperCase()}'),
+                              subtitle:
+                                  Text('${revenuData.revenus[index].montant}'),
+                              trailing: InkWell(
+                                onTap: () {
+                                  Provider.of<BudgetProvider>(context,
+                                          listen: false)
+                                      .deleteRevnu(revenuData.revenus[index]);
+                                },
+                                child: Icon(
+                                  Icons.delete,
+                                  color: AppColor.secondarycolor,
+                                ),
+                              ));
+                        }),
+              );
+            })
+          ],
+        ),
       ),
+      floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColor.secondarycolor,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return Revenuformsscreen();
+            }));
+          },
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          )),
     );
   }
 }

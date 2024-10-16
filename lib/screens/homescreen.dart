@@ -3,9 +3,11 @@ import 'package:gestionbudget/consts.dart';
 import 'package:gestionbudget/models/budget.dart';
 import 'package:gestionbudget/models/depenses.dart';
 import 'package:gestionbudget/models/revenu.dart';
+import 'package:gestionbudget/providers/budget.dart';
 import 'package:gestionbudget/screens/depenseform.dart';
 import 'package:gestionbudget/widgets/containercontent.dart';
 import 'package:gestionbudget/widgets/depenselist.dart';
+import 'package:provider/provider.dart';
 
 class Homescreen extends StatefulWidget {
   const Homescreen({super.key});
@@ -82,7 +84,7 @@ class _HomescreenState extends State<Homescreen> {
               textContainer: "Budget",
               widthContainer: 350.0,
               heightContainer: 150,
-              someContaine: totalRevenus),
+              someContaine: Provider.of<BudgetProvider>(context).totalRevenus),
           SizedBox(
             height: 15.0,
           ),
@@ -93,12 +95,13 @@ class _HomescreenState extends State<Homescreen> {
                   textContainer: "Depense",
                   widthContainer: 170,
                   heightContainer: 150,
-                  someContaine: totalDepenses),
+                  someContaine:
+                      Provider.of<BudgetProvider>(context).totalDepenses),
               Containercontent(
                   textContainer: "Solde",
                   widthContainer: 170,
                   heightContainer: 150,
-                  someContaine: solde),
+                  someContaine: Provider.of<BudgetProvider>(context).solde),
             ],
           ),
           SizedBox(
